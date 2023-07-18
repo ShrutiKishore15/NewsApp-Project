@@ -11,9 +11,9 @@ async function fetchNews(topic, language){
             "x-api-key":API_KEY
         }
     });
-    //const data=await response.json();
-    //bindArticles(data.articles);
-    console.log(response);
+    const data=await response.json();
+    bindArticles(data.articles);
+    //console.log(response);
 }
 
 function bindArticles(articles){
@@ -21,8 +21,8 @@ function bindArticles(articles){
     const cardTemplate=document.getElementById('temp-news-card');
     cardCont.innerHTML="";
     let count=0;
-    articles.forEach((article) => {
-        if(!article.urlToImage) return;
+    !!articles && articles.forEach((article) => {
+        if(!article.media) return;
         // if(!article.title) return;
         if(count>20) return;
         const cloneOfCard=cardTemplate.content.cloneNode(true);
@@ -37,20 +37,20 @@ function appendData(cloneOfCard, article){
     const newsSrc=cloneOfCard.querySelector('#news-source');
     const newsDesc=cloneOfCard.querySelector('#news-desc');
 
-    newsImg.src=article.urlToImage;
+    newsImg.src=article.media;
     newsTitle.innerHTML=article.title;
-    newsDesc.innerHTML=article.description;
+    newsDesc.innerHTML=article.excerpt;
 
-    const date=new Date(article.publishedAt).toLocaleString("en-US", {timeZone:"Asia/Jakarta",});
-    newsSrc.innerHTML=`${article.source.name}  •  ${date}`;
-    //newsSrc.innerHTML=article.source.name;
+    //const date=new Date(article.publishedAt).toLocaleString("en-US", {timeZone:"Asia/Jakarta",});
+    //newsSrc.innerHTML=`${article.source.name}  •  ${date}`;
+    newsSrc.innerHTML=`${article.rights} • ${article.published_date}`;
     cloneOfCard.firstElementChild.addEventListener("click", ()=>{
-        window.open(article.url, "_blank");
+        window.open(article.link, "_blank");
     })
 }
 let selectedNav=null;
-function onNavItem(query){
-    fetchNews(query);
+function onNavItem(query, language="en"){
+    fetchNews(query, language);
     const navItem=document.getElementById(query);
     selectedNav?.classList.remove('selected');
     selectedNav=navItem;
