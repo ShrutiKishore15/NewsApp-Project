@@ -5,7 +5,7 @@ const API_KEY="31597965248f4ed58a717c7948c85fc8";
 //const url="https://api.newscatcherapi.com/v2/latest_headlines?";
 const url="https://api.worldnewsapi.com/search-news?";
 
-window.addEventListener("load", ()=>fetchNews("business", "en"));
+window.addEventListener("load", ()=>fetchNews("science", "en"));
 
 async function fetchNews(topic, language){
     // const response=await fetch(`${url}topic=${topic}&lang=${language}`, {
@@ -14,9 +14,9 @@ async function fetchNews(topic, language){
     //     }
     // });
     const response=await fetch(`${url}text=${topic}&language=${language}&api-key=${API_KEY}`);
-    //const data=await response.json();
-    //bindArticles(data.articles);
-    console.log(response);
+    const data=await response.json();
+    bindArticles(data.news);
+    //console.log(response);
 }
 
 function bindArticles(articles){
@@ -25,7 +25,7 @@ function bindArticles(articles){
     cardCont.innerHTML="";
     let count=0;
     !!articles && articles.forEach((article) => {
-        if(!article.media) return;
+        if(!article.image) return;
         // if(!article.title) return;
         if(count>20) return;
         const cloneOfCard=cardTemplate.content.cloneNode(true);
@@ -40,15 +40,29 @@ function appendData(cloneOfCard, article){
     const newsSrc=cloneOfCard.querySelector('#news-source');
     const newsDesc=cloneOfCard.querySelector('#news-desc');
 
-    newsImg.src=article.media;
+    newsImg.src=article.image;
     newsTitle.innerHTML=article.title;
-    newsDesc.innerHTML=article.excerpt;
+    summary=article.text;
+    let desc="";
+    countSentence=0;
+    for (let index=0; index < summary.length; index++) {
+        if(countSentence>3){
+            break;
+        }
+        let char = summary[index];
+        if(char=='.'){
+            countSentence++;
+        }
+        desc+=char;
+    }
+    newsDesc.innerHTML=desc;
 
     //const date=new Date(article.publishedAt).toLocaleString("en-US", {timeZone:"Asia/Jakarta",});
     //newsSrc.innerHTML=`${article.source.name}  •  ${date}`;
-    newsSrc.innerHTML=`${article.rights} • ${article.published_date}`;
+    //newsSrc.innerHTML=`${article.rights} • ${article.published_date}`;
+    newsSrc.innerHTML=article.publish_date;
     cloneOfCard.firstElementChild.addEventListener("click", ()=>{
-        window.open(article.link, "_blank");
+        window.open(article.url, "_blank");
     })
 }
 let selectedNav=null;
