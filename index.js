@@ -1,19 +1,22 @@
 //const API_KEY="7d1632fada824725892e2cf2c0caf3d7";
-const API_KEY="QGOWVXsyGuMrCQmb87Icvd6wS9qUUeFZTSNuIb5MkXQ";
+//const API_KEY="QGOWVXsyGuMrCQmb87Icvd6wS9qUUeFZTSNuIb5MkXQ";
+const API_KEY="31597965248f4ed58a717c7948c85fc8";
 //const url="https://newsapi.org/v2/everything?q=";
-const url="https://api.newscatcherapi.com/v2/latest_headlines?";
+//const url="https://api.newscatcherapi.com/v2/latest_headlines?";
+const url="https://api.worldnewsapi.com/search-news?";
 
 window.addEventListener("load", ()=>fetchNews("business", "en"));
 
 async function fetchNews(topic, language){
-    const response=await fetch(`${url}topic=${topic}&lang=${language}`, {
-        headers:{
-            "x-api-key":API_KEY
-        }
-    });
-    const data=await response.json();
-    bindArticles(data.articles);
-    //console.log(response);
+    // const response=await fetch(`${url}topic=${topic}&lang=${language}`, {
+    //     headers:{
+    //         "x-api-key":API_KEY
+    //     }
+    // });
+    const response=await fetch(`${url}text=${topic}&language=${language}&api-key=${API_KEY}`);
+    //const data=await response.json();
+    //bindArticles(data.articles);
+    console.log(response);
 }
 
 function bindArticles(articles){
